@@ -77,7 +77,7 @@ def _create_minimal_ics55_pdk(root: Path) -> Path:
     tech_path.write_text("VERSION 5.8 ;\n")
 
     stdcell_root = root / "IP" / "STD_cell" / "ics55_LLSC_H7C_V1p10C100"
-    for flavor in ("ics55_LLSC_H7CR", "ics55_LLSC_H7CL"):
+    for flavor in ("ics55_LLSC_H7CR", "ics55_LLSC_H7CL", "ics55_LLSC_H7CH"):
         lef_path = stdcell_root / flavor / "lef" / f"{flavor}_ecos.lef"
         lef_path.parent.mkdir(parents=True, exist_ok=True)
         lef_path.write_text("VERSION 5.8 ;\n")

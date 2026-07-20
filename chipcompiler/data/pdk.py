@@ -159,6 +159,7 @@ def PDK_ICS55(pdk_root: str | Path = "") -> PDK:
     lef_paths = [
         stdcell_dir / "ics55_LLSC_H7CR" / "lef" / "ics55_LLSC_H7CR_ecos.lef",
         stdcell_dir / "ics55_LLSC_H7CL" / "lef" / "ics55_LLSC_H7CL_ecos.lef",
+        stdcell_dir / "ics55_LLSC_H7CH" / "lef" / "ics55_LLSC_H7CH_ecos.lef",
     ]
     lib_paths = [
         (
@@ -168,6 +169,10 @@ def PDK_ICS55(pdk_root: str | Path = "") -> PDK:
         (
             stdcell_dir / "ics55_LLSC_H7CL" / "liberty"
             / "ics55_LLSC_H7CL_ss_rcworst_1p08_125_nldm.lib"
+        ),
+        (
+            stdcell_dir / "ics55_LLSC_H7CH" / "liberty"
+            / "ics55_LLSC_H7CH_ss_rcworst_1p08_125_nldm.lib"
         ),
     ]
     mapping_file = None

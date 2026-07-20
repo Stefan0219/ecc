@@ -21,6 +21,8 @@ def test_get_pdk_prefers_explicit_root_over_env(
     assert pdk.tech.is_relative_to(expected_root)
     assert all(isinstance(path, Path) for path in pdk.lefs + pdk.libs)
     assert all(path.is_relative_to(expected_root) for path in pdk.lefs + pdk.libs)
+    assert any("ics55_LLSC_H7CH" in str(path) for path in pdk.lefs)
+    assert any("ics55_LLSC_H7CH" in str(path) for path in pdk.libs)
 
 
 def test_get_pdk_uses_namespaced_env(tmp_path, monkeypatch, minimal_ics55_pdk_factory):
