@@ -29,14 +29,61 @@
         hash = "sha256-hyDKWsQnfPVuxxBNxjdGR6AsGa/1NkdflBmwiK3Eqz0=";
       };
 
+      postPatch = ''
+        substituteInPlace pyproject.toml \
+          --replace-fail 'uv-build>=0.10.0,<0.11.24' 'uv-build>=0.8.5,<0.11.24'
+      '';
+
       build-system = with python3Packages; [ uv-build ];
 
       pythonImportsCheck = [ "rosettakit" ];
     };
 
+    oslash = {
+      fetchPypi,
+      python3Packages,
+    }: python3Packages.buildPythonPackage rec {
+      pname = "oslash";
+      version = "0.6.3";
+      format = "wheel";
+
+      src = fetchPypi {
+        pname = "OSlash";
+        inherit version format;
+        dist = "py3";
+        python = "py3";
+        hash = "sha256-ibl4RDt9s6wmZhBr3DaArdPIhqbY/N0C/QYq+G0pSU8=";
+      };
+
+      dependencies = with python3Packages; [ typing-extensions ];
+
+      pythonImportsCheck = [ "oslash" ];
+    };
+
+    jsonrpcserver = {
+      fetchPypi,
+      oslash,
+      python3Packages,
+    }: python3Packages.buildPythonPackage rec {
+      pname = "jsonrpcserver";
+      version = "5.0.9";
+      format = "setuptools";
+
+      src = fetchPypi {
+        inherit pname version;
+        hash = "sha256-px+yz6GFQcgJNfYJh/knVdlNdBQSSMdDiEe5bu5cRII=";
+      };
+
+      build-system = with python3Packages; [ setuptools ];
+      dependencies = with python3Packages; [ jsonschema oslash ];
+
+      pythonImportsCheck = [ "jsonrpcserver" ];
+    };
+
     chipcompiler = {
       ecc-dreamplace,
       ecc-tools,
+      jsonrpcserver,
       rosettakit,
       yosysWithSlang,
       lib,
@@ -62,6 +109,7 @@
         ecc-dreamplace
         ecc-tools
         fastapi
+        jsonrpcserver
         klayout
         matplotlib
         numpy
@@ -92,6 +140,8 @@
         "chipcompiler.tools"
         "chipcompiler.cli"
       ];
+
+      meta.mainProgram = "ecc";
     };
   in flake-parts.lib.mkFlake { inherit inputs; } {
     systems = [ "x86_64-linux" ];
@@ -99,6 +149,9 @@
       packages.default = pkgs.callPackage chipcompiler {
         ecc-dreamplace = ecc-dreamplace.packages.${system}.default;
         ecc-tools = ecc-tools.packages.${system}.default;
+        jsonrpcserver = pkgs.callPackage jsonrpcserver {
+          oslash = pkgs.callPackage oslash {};
+        };
         rosettakit = pkgs.callPackage rosettakit {};
         yosysWithSlang = infra.packages.${system}.yosysWithSlang;
       };
