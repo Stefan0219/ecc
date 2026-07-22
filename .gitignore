@@ -189,3 +189,6 @@ task_plan.md
 .agents/
 
 .ccache
+
+# Local backend benchmark workspaces and generated reports.
+benchmark_runs/
